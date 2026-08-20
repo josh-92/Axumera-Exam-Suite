@@ -1,0 +1,64 @@
+# Secrets / credentials
+.env
+*.env
+*.key
+*.pem
+*.pfx
+*.p12
+license.lic
+installed.lock
+
+# Databases / runtime data
+data/
+**/data/
+**/mariadb/
+**/mysql/
+*.ibd
+*.frm
+*.MYD
+*.MYI
+
+# Logs / backups
+logs/
+**/logs/
+backups/
+**/backups/
+*.log
+
+# Build outputs
+bin/
+obj/
+publish/
+distribution/
+native/build/
+
+# Temporary/test environments
+rehearsal/
+staging/
+phase10-debug/
+matrixtest/
+failrec/
+kiosk-regress/
+tmp/
+temp/
+
+# IDE / OS
+.vs/
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+# Local AI/tool state
+.freebuff/
+
+# Local cryptographic/random state
+.rnd
+
+# Temporary local files
+test.txt
+
+# All generated build/test environments
+build/
+# Release installers
+*.exe

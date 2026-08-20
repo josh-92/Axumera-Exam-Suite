@@ -1,0 +1,68 @@
+EAES — EXAMINATION AUTOMATION & EVALUATION SYSTEM
+COMMERCIAL LICENSE AGREEMENT
+=====================================================================
+
+This is a template commercial license for the EAES codebase. Replace
+the bracketed placeholders with your own business details before
+distributing purchased copies. It is written in the style of typical
+"regular license" terms used by script marketplaces (e.g. CodeCanyon)
+so it will be familiar to buyers, but it is provided as-is and is not
+legal advice — have it reviewed by a lawyer before relying on it
+commercially.
+
+1. GRANT OF LICENSE
+   Subject to payment of the applicable license fee, [VENDOR NAME]
+   ("Licensor") grants the purchaser ("Licensee") a non-exclusive,
+   non-transferable license to install and use one copy of the EAES
+   source code on a single production domain (the domain bound to the
+   license key, see Section 4) plus unlimited staging/development
+   copies of the same domain.
+
+2. PERMITTED USE
+   Licensee may:
+   - Modify the source code for their own use.
+   - Use EAES to administer exams for their own students, employees,
+     or clients (as an end product, not resold as a competing script).
+   - Deploy the modified system on the licensed domain and its
+     subdomains.
+
+3. RESTRICTIONS
+   Licensee may NOT, without a separate agreement from Licensor:
+   - Resell, sublicense, or redistribute the EAES source code itself
+     (as opposed to a running exam system built with it).
+   - Remove or alter the license-gate mechanism (`app/Core/License.php`)
+     in a way intended to bypass licensing on additional domains beyond
+     what was purchased.
+   - Use the code to build a directly competing exam-platform product
+     for resale.
+
+4. LICENSE KEYS
+   A license key encodes the licensed domain and an optional expiry
+   date, and is signed with a secret held by Licensor. Keys are
+   configured via the `LICENSE_KEY` and `LICENSE_DOMAIN` values in
+   `.env`. `app/Core/License.php` validates keys entirely offline (no
+   phone-home) — the admin panel simply displays a warning banner when
+   no valid key is configured; it does not lock end users (students)
+   out of an in-progress exam.
+
+5. WARRANTY DISCLAIMER
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+   NONINFRINGEMENT.
+
+6. LIMITATION OF LIABILITY
+   IN NO EVENT SHALL LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR
+   OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+7. SUPPORT & UPDATES
+   Support and update terms (duration, channels, SLAs) are defined by
+   whatever purchase tier Licensee bought and are outside the scope of
+   this template.
+
+=====================================================================
+Third-party components bundled with EAES:
+- MathJax (Apache License 2.0) — assets/vendor/mathjax/
+- Chart.js (MIT License) — loaded from CDN in analytics.php, not bundled
+=====================================================================

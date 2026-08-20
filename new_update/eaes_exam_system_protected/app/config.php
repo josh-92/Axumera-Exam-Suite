@@ -1,0 +1,8 @@
+<?php
+/*   __________________________________________________
+    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
+    |              on 2026-08-01 22:27:04              |
+    |    GitHub: https://github.com/pk-fr/yakpro-po    |
+    |__________________________________________________|
+*/
+ use App\Core\Env; Env::load(dirname(__DIR__) . '/.env'); return ['app' => ['name' => Env::get('APP_NAME', 'EAES Exam System'), 'env' => Env::get('APP_ENV', 'production'), 'debug' => filter_var(Env::get('APP_DEBUG', false), FILTER_VALIDATE_BOOLEAN), 'url' => rtrim((string) Env::get('APP_URL', ''), '/'), 'timezone' => Env::get('APP_TIMEZONE', 'UTC'), 'key' => Env::get('APP_KEY', ''), 'force_https' => filter_var(Env::get('FORCE_HTTPS', false), FILTER_VALIDATE_BOOLEAN)], 'db' => ['host' => Env::get('DB_HOST', 'localhost'), 'port' => (int) Env::get('DB_PORT', 3306), 'name' => Env::get('DB_NAME', 'eaes_exam'), 'user' => Env::get('DB_USER', 'root'), 'pass' => Env::get('DB_PASS', ''), 'charset' => Env::get('DB_CHARSET', 'utf8mb4')], 'security' => ['session_lifetime_minutes' => (int) Env::get('SESSION_LIFETIME_MINUTES', 180), 'admin_max_login_attempts' => (int) Env::get('ADMIN_MAX_LOGIN_ATTEMPTS', 5), 'admin_lockout_minutes' => (int) Env::get('ADMIN_LOCKOUT_MINUTES', 15)], 'exam' => ['autosave_interval_seconds' => (int) Env::get('AUTOSAVE_INTERVAL_SECONDS', 15), 'grace_period_seconds' => (int) Env::get('GRACE_PERIOD_SECONDS', 10)], 'integrity' => ['enabled' => filter_var(Env::get('INTEGRITY_LOCKDOWN_ENABLED', true), FILTER_VALIDATE_BOOLEAN), 'warn_threshold' => (int) Env::get('INTEGRITY_WARN_THRESHOLD', 1), 'auto_submit_threshold' => (int) Env::get('INTEGRITY_AUTO_SUBMIT_THRESHOLD', 0), 'flag_threshold' => (int) Env::get('INTEGRITY_FLAG_THRESHOLD', 3)]];

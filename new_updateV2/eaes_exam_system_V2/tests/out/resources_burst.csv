@@ -1,0 +1,4 @@
+ts,threads_connected,threads_running,questions,slow_queries,max_used_conn,aborted_conns,port80_est
+1785938623,1,6,17310,0,9,0,0
+1785938625,1,6,17312,0,9,0,0
+1785938627,1,6,17715,0,17,0,342

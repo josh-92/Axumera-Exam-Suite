@@ -1,0 +1,12 @@
+{
+  "product": "Axumera Exam Suite private Windows runtime",
+  "runtime": {
+    "php": { "version": "8.2.12", "sapi": "Apache module", "extensions": ["pdo_mysql", "mbstring", "openssl", "fileinfo"], "ini": "runtime/php/php.ini" },
+    "apache": { "version": "2.4.58 Win64", "modules": ["mpm_winnt (compiled in)", "authn_core", "authz_core", "authz_host", "mime", "dir", "alias", "rewrite", "headers", "log_config", "php"], "config": "runtime/apache/conf/axumera-httpd.conf" },
+    "mariadb": { "version": "10.4.32", "engine": "InnoDB", "charset": "utf8mb4", "collation": "utf8mb4_general_ci", "config": "config/axumera-my.ini" }
+  },
+  "ports": { "apache": 8088, "mariadb": 3308, "bindAddress": "127.0.0.1" },
+  "writableDirectories": ["data/mariadb", "data/tmp", "logs", "application/eaes_exam_system/storage/logs", "application/eaes_exam_system/storage/cache", "application/eaes_exam_system/storage/sessions"],
+  "startupOrder": ["generate runtime configuration", "start MariaDB", "wait for mysqladmin ping", "start Apache", "GET /health.php"],
+  "healthCheck": { "url": "/health.php", "success": "HTTP 200 and {status: ok}", "exposes": "health state only" }
+}

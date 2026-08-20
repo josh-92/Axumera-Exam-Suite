@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Axumera.Licensing</RootNamespace>
+    <AssemblyName>Axumera.Licensing</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Axumera.Core\Axumera.Core.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,8 @@
+<?php
+/*   __________________________________________________
+    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
+    |              on 2026-08-01 22:27:04              |
+    |    GitHub: https://github.com/pk-fr/yakpro-po    |
+    |__________________________________________________|
+*/
+ namespace App\Repositories; use App\Core\Database; use PDO; class CurriculumRepository { private Database $db; public function __construct() { $this->db = new Database(); } public function getChaptersBySubjectAndGrade(string $Jr8tQ, string $GxDJ7): array { $dzhGf = $this->db->getConnection()->prepare("\n            SELECT c.*, t.id as topic_id, t.name as topic_name, t.target_weight as topic_weight \n            FROM curriculum_chapters c\n            LEFT JOIN curriculum_topics t ON c.id = t.chapter_id\n            WHERE c.subject = :subject AND c.grade = :grade\n        "); $dzhGf->execute(['subject' => $Jr8tQ, 'grade' => $GxDJ7]); return $dzhGf->fetchAll(PDO::FETCH_ASSOC); } public function getExamCurriculumBreakdown(int $ugLXG): array { $dzhGf = $this->db->getConnection()->prepare("\n            SELECT eq.exam_id, q.curriculum_topic_id, ct.name as topic_name, cc.id as chapter_id, cc.name as chapter_name,\n            COUNT(eq.question_id) as question_count, SUM(eq.allocated_marks) as total_marks\n            FROM generated_exam_questions eq\n            JOIN questions q ON eq.question_id = q.id\n            LEFT JOIN curriculum_topics ct ON q.curriculum_topic_id = ct.id\n            LEFT JOIN curriculum_chapters cc ON ct.chapter_id = cc.id\n            WHERE eq.exam_id = :exam_id\n            GROUP BY cc.id, ct.id\n        "); $dzhGf->execute(['exam_id' => $ugLXG]); return $dzhGf->fetchAll(PDO::FETCH_ASSOC); } }

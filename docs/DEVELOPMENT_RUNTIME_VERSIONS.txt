@@ -1,0 +1,10 @@
+php version 	->> PHP 8.2.12 (cli) (built: Oct 24 2023 21:15:15) (ZTS Visual C++ 2019 x64)
+			Copyright (c) The PHP Group
+			Zend Engine v4.2.12, Copyright (c) Zend Technologies
+
+
+apache version ->> 	Server version: Apache/2.4.58 (Win64)
+			Apache Lounge VS17 Server built:   Oct 18 2023 13:03:18
+
+
+mariadb version ->> 	Ver 15.1 Distrib 10.4.32-MariaDB, for Win64 (AMD64), source revision c4143f909528e3fab0677a28631d10389354c491-

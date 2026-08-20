@@ -1,0 +1,93 @@
+{
+    "vus": 1,
+    "ramp_seconds": 5,
+    "exam_id": 2,
+    "wall_seconds": 14.06,
+    "planned_requests": 6,
+    "completed_requests": 6,
+    "total_ms": 16025.6,
+    "overall": {
+        "success": 5,
+        "failure": 1,
+        "avg_ms": 2670.9,
+        "median_ms": 2340.5,
+        "p95_ms": 4346.6,
+        "p99_ms": 4346.6,
+        "max_ms": 4346.6,
+        "rps": 0.43
+    },
+    "by_step": {
+        "login_page": {
+            "requests": 1,
+            "success": 1,
+            "failure": 0,
+            "avg_ms": 2359.7,
+            "median_ms": 2359.7,
+            "p95_ms": 2359.7,
+            "max_ms": 2359.7,
+            "status_codes": {
+                "200": 1
+            }
+        },
+        "login_post": {
+            "requests": 1,
+            "success": 1,
+            "failure": 0,
+            "avg_ms": 2349.7,
+            "median_ms": 2349.7,
+            "p95_ms": 2349.7,
+            "max_ms": 2349.7,
+            "status_codes": {
+                "200": 1
+            }
+        },
+        "wait_poll": {
+            "requests": 1,
+            "success": 1,
+            "failure": 0,
+            "avg_ms": 2310.8,
+            "median_ms": 2310.8,
+            "p95_ms": 2310.8,
+            "max_ms": 2310.8,
+            "status_codes": {
+                "302": 1
+            }
+        },
+        "fetch_exam": {
+            "requests": 1,
+            "success": 1,
+            "failure": 0,
+            "avg_ms": 4346.6,
+            "median_ms": 4346.6,
+            "p95_ms": 4346.6,
+            "max_ms": 4346.6,
+            "status_codes": {
+                "302": 1
+            }
+        },
+        "autosave": {
+            "requests": 1,
+            "success": 0,
+            "failure": 1,
+            "avg_ms": 2340.5,
+            "median_ms": 2340.5,
+            "p95_ms": 2340.5,
+            "max_ms": 2340.5,
+            "status_codes": {
+                "401": 1
+            }
+        },
+        "submit": {
+            "requests": 1,
+            "success": 1,
+            "failure": 0,
+            "avg_ms": 2318.3,
+            "median_ms": 2318.3,
+            "p95_ms": 2318.3,
+            "max_ms": 2318.3,
+            "status_codes": {
+                "200": 1
+            }
+        }
+    }
+}

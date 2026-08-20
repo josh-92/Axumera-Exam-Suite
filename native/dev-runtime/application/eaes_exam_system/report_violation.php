@@ -1,0 +1,13 @@
+<?php
+/*   __________________________________________________
+    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
+    |              on 2026-08-01 22:27:06              |
+    |    GitHub: https://github.com/pk-fr/yakpro-po    |
+    |__________________________________________________|
+*/
+ require_once __DIR__ . '/app/bootstrap.php'; use App\Core\Csrf; use App\Core\Logger; use App\Repositories\AttemptRepository; use App\Repositories\ExamRepository; header('Content-Type: application/json'); if (isset($_SESSION['full_name'], $_SESSION['student_id'])) { goto f6k_U; } http_response_code(401); echo json_encode(['status' => 'error', 'message' => 'Not logged in.']); exit; f6k_U: $sBI4y = file_get_contents('php://input'); $SUqg4 = json_decode($sBI4y, true) ?: []; $VpokN = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? $SUqg4['csrf_token'] ?? null; if (Csrf::verify($VpokN)) { goto sijrw; } http_response_code(419); echo json_encode(['status' => 'error', 'message' => 'Session expired.']); exit; sijrw: if ((bool) b_K5t('integrity.enabled', true)) { goto VD3Mt; } echo json_encode(['status' => 'success', 'ignored' => true]); exit; VD3Mt: // 'controlled_exit' (Phase 4): reported by the native Axumera Student client
+// when the student deliberately leaves the exam through the shell's Exit Exam
+// button or the close-window confirmation. The student page performs the POST
+// through this same endpoint, so counting, flagging, and auto-submit thresholds
+// are unchanged and server-authoritative.
+ $TnqPN = ['tab_hidden', 'window_blur', 'fullscreen_exit', 'copy_attempt', 'paste_attempt', 'context_menu_attempt', 'devtools_shortcut_attempt', 'controlled_exit']; $Oyoow = is_string($SUqg4['event'] ?? null) ? $SUqg4['event'] : ''; if (in_array($Oyoow, $TnqPN, true)) { goto Xcoxw; } http_response_code(422); echo json_encode(['status' => 'error', 'message' => 'Unrecognized event type.']); exit; Xcoxw: $QR3LD = ExamRepository::liveExam(); if ($QR3LD) { goto tChdi; } echo json_encode(['status' => 'error', 'message' => 'No live exam.']); exit; tChdi: $ugLXG = (int) $QR3LD['id']; $ii9hU = (int) $_SESSION['student_id']; $wphBH = AttemptRepository::recordViolation($ii9hU, $ugLXG); Logger::audit('student', (string) ($_SESSION['roll_number'] ?? $ii9hU), 'integrity_violation', ['exam_id' => $ugLXG, 'event' => $Oyoow, 'violation_count' => $wphBH['violation_count'], 'flagged' => $wphBH['flagged']]); $ccrCw = (int) B_k5T('integrity.auto_submit_threshold', 0); $d032a = $ccrCw > 0 && $wphBH['violation_count'] >= $ccrCw; echo json_encode(['status' => 'success', 'violation_count' => $wphBH['violation_count'], 'flagged' => $wphBH['flagged'], 'warn_threshold' => (int) B_K5t('integrity.warn_threshold', 1), 'auto_submit' => $d032a]);

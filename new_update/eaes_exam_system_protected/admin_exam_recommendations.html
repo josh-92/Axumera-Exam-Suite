@@ -1,0 +1,34 @@
+<?php require_once 'partials/admin_header.php'; ?>
+
+<link rel="stylesheet" href="assets/css/recommendations.css">
+
+<div class="content-wrapper">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1>AI Exam Optimization Engine</h1>
+        <div>
+            <input type="number" id="rec-exam-id" class="form-control d-inline-block w-auto" placeholder="Enter Exam ID">
+            <button class="btn btn-dark" onclick="recommendationApp.analyzeExam()">Generate Insights</button>
+        </div>
+    </div>
+
+    <div id="optimization-container" style="display:none;" class="mt-4">
+        <div class="alert alert-info d-flex justify-content-between align-items-center">
+            <span id="exam-balance-status"><strong>Overall Balance:</strong> Checking...</span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-dark text-white"><h4>Actionable Recommendations</h4></div>
+                    <div class="card-body">
+                        <div id="recommendations-list" class="list-group">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/recommendations.js"></script>

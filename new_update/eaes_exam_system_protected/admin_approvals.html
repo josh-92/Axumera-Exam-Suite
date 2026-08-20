@@ -1,0 +1,55 @@
+<?php require_once 'partials/admin_header.php'; ?>
+
+<div class="content-wrapper mt-4 container">
+    <div class="page-header mb-4">
+        <h2>Enterprise Approval Queue</h2>
+        <p class="text-muted">Review and manage pending items to enforce strict quality control.</p>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Pending Questions</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Preview</th>
+                        <th>Submitted By</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="pending-queue">
+                    <tr><td colspan="5" class="text-center py-4">Loading queue...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Decision Modal -->
+<div class="modal fade" id="decisionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Process Approval</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modal-entity-id">
+                <div class="mb-3">
+                    <label>Review Comments / Audit Notes</label>
+                    <textarea id="modal-comments" class="form-control" rows="3" placeholder="Explain your decision (Required for rejection)"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="approvalQueue.processDecision('reject')">Reject to Draft</button>
+                <button type="button" class="btn btn-success" onclick="approvalQueue.processDecision('approve')">Approve Item</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/approvals.js"></script>

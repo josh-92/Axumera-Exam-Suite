@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>Axumera.ControlPanel</RootNamespace>
+    <AssemblyName>Axumera.ControlPanel</AssemblyName>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Axumera.Core\Axumera.Core.csproj" />
+    <ProjectReference Include="..\Axumera.Ui\Axumera.Ui.csproj" />
+    <ProjectReference Include="..\Axumera.Licensing\Axumera.Licensing.csproj" />
+    <ProjectReference Include="..\Axumera.Server\Axumera.Server.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\app.ico" />
+    <EmbeddedResource Include="Resources\logo.png" />
+  </ItemGroup>
+  <Target Name="StampSources" BeforeTargets="CoreCompile">
+    <Exec Command="powershell -NoProfile -Command &quot;((Get-FileHash &apos;$(MSBuildProjectDirectory)\Program.cs&apos; -Algorithm SHA256).Hash) + &apos; &apos; + ((Get-FileHash &apos;$(MSBuildProjectDirectory)\ControlPanelMainForm.cs&apos; -Algorithm SHA256).Hash) | Set-Content &apos;$(MSBuildProjectDirectory)\obj\src-stamp.txt&apos;&quot;" />
+  </Target>
+</Project>

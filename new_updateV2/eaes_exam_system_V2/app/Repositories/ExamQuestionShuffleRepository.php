@@ -1,0 +1,9 @@
+<?php
+/*   __________________________________________________
+    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
+    |              on 2026-08-01 22:27:05              |
+    |    GitHub: https://github.com/pk-fr/yakpro-po    |
+    |__________________________________________________|
+*/
+ namespace App\Repositories; use App\Core\Database; use PDOException; class ExamQuestionShuffleRepository { public static function find(int $ii9hU, int $ugLXG): ?array { $dzhGf = Database::connection()->prepare('SELECT * FROM exam_question_shuffles WHERE student_id = :s AND exam_id = :e LIMIT 1'); $dzhGf->execute(['s' => $ii9hU, 'e' => $ugLXG]); $RmthD = $dzhGf->fetch(); return $RmthD ?: null; } public static function createIfNotExists(int $ii9hU, int $ugLXG, int $R_oSw, array $L9Goh, array $Px8Xl): array { $lNNqu = self::find($ii9hU, $ugLXG); if (!$lNNqu) { goto R2fLL; } return $lNNqu; R2fLL: try { $dzhGf = Database::connection()->prepare('INSERT INTO exam_question_shuffles (student_id, exam_id, attempt_id, question_order, choice_order, created_at)
+                 VALUES (:s, :e, :a, :qo, :co, NOW())'); $dzhGf->execute(['s' => $ii9hU, 'e' => $ugLXG, 'a' => $R_oSw, 'qo' => json_encode(array_values($L9Goh), JSON_UNESCAPED_UNICODE), 'co' => json_encode($Px8Xl, JSON_UNESCAPED_UNICODE)]); } catch (PDOException $NacY1) { if (!($NacY1->getCode() !== '23000')) { goto srrgH; } throw $NacY1; srrgH: } $RmthD = self::find($ii9hU, $ugLXG); if (!$RmthD) { goto GW4wz; } return $RmthD; GW4wz: return ['student_id' => $ii9hU, 'exam_id' => $ugLXG, 'attempt_id' => $R_oSw, 'question_order' => json_encode(array_values($L9Goh), JSON_UNESCAPED_UNICODE), 'choice_order' => json_encode($Px8Xl, JSON_UNESCAPED_UNICODE)]; } public static function deleteForExam(int $ugLXG): void { $dzhGf = Database::connection()->prepare('DELETE FROM exam_question_shuffles WHERE exam_id = :id'); $dzhGf->execute(['id' => $ugLXG]); } }

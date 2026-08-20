@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Deterministic>true</Deterministic>
+    <Version>2.0.0</Version>
+    <Product>Axumera 2.0</Product>
+    <Company>Axumera Technologies</Company>
+    <Copyright>© 2026 Axumera Technologies. All rights reserved.</Copyright>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+</Project>

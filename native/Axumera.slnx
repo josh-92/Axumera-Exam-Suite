@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Axumera.ControlPanel/Axumera.ControlPanel.csproj" />
+    <Project Path="src/Axumera.Core/Axumera.Core.csproj" />
+    <Project Path="src/Axumera.Licensing/Axumera.Licensing.csproj" />
+    <Project Path="src/Axumera.Server/Axumera.Server.csproj" />
+    <Project Path="src/Axumera.Student/Axumera.Student.csproj" />
+    <Project Path="src/Axumera.Ui/Axumera.Ui.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Axumera.Core.Tests/Axumera.Core.Tests.csproj" />
+    <Project Path="tests/Axumera.Licensing.Tests/Axumera.Licensing.Tests.csproj" />
+    <Project Path="tests/Axumera.Server.Tests/Axumera.Server.Tests.csproj" />
+  </Folder>
+</Solution>

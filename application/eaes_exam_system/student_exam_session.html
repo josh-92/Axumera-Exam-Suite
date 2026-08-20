@@ -1,0 +1,24 @@
+<?php require_once 'partials/student_header.php'; ?>
+
+<link rel="stylesheet" href="assets/css/exam_session.css">
+
+<div class="container mt-5">
+    <div id="exam-container" class="card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between">
+            <h3 id="ui-exam-name">Loading Exam...</h3>
+            <div>Time Remaining: <span id="timer" class="font-weight-bold">00:00</span></div>
+        </div>
+        <div class="card-body">
+            <div id="question-box">
+                <!-- Dynamically rendered active question -->
+            </div>
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-secondary" onclick="examSession.prevQuestion()">Previous</button>
+                <button class="btn btn-primary" onclick="examSession.nextQuestion()" id="btn-next">Next</button>
+                <button class="btn btn-success" onclick="examSession.submitExam()" id="btn-submit" style="display:none;">Submit Exam</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/exam_session.js"></script>

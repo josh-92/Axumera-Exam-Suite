@@ -1,0 +1,9 @@
+<?php
+/*   __________________________________________________
+    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
+    |              on 2026-08-01 22:27:04              |
+    |    GitHub: https://github.com/pk-fr/yakpro-po    |
+    |__________________________________________________|
+*/
+ namespace App\Core; class Logger { public static function info(string $tvwac): void { self::write('INFO', $tvwac); } public static function warning(string $tvwac): void { self::write('WARNING', $tvwac); } public static function error(string $tvwac): void { self::write('ERROR', $tvwac); } public static function audit(string $sf89B, ?string $YNidD, string $uJgaK, array $FwM6e = []): void { self::write('AUDIT', "{$sf89B}:{$YNidD} {$uJgaK} " . json_encode($FwM6e)); try { $dzhGf = Database::connection()->prepare('INSERT INTO activity_log (actor_type, actor_identifier, action, details, ip_address, created_at)
+                 VALUES (:actor_type, :actor_identifier, :action, :details, :ip, NOW())'); $dzhGf->execute(['actor_type' => $sf89B, 'actor_identifier' => $YNidD, 'action' => $uJgaK, 'details' => json_encode($FwM6e), 'ip' => self::clientIp()]); } catch (\Throwable $NacY1) { self::write('ERROR', 'Audit DB write failed: ' . $NacY1->getMessage()); } } public static function clientIp(): string { foreach (['HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'] as $CmSTM) { if (empty($_SERVER[$CmSTM])) { goto pdnhW; } $pIevI = explode(',', $_SERVER[$CmSTM]); return trim($pIevI[0]); pdnhW: ORSIu: } O7ga4: return '0.0.0.0'; } private static function write(string $sYhSy, string $tvwac): void { $XbBco = dirname(__DIR__, 2) . '/storage/logs'; if (is_dir($XbBco)) { goto GVZsl; } @mkdir($XbBco, 0755, true); GVZsl: $PsDd2 = $XbBco . '/' . date('Y-m-d') . '.log'; $iggao = sprintf("[%s] %s: %s%s", date('Y-m-d H:i:s'), $sYhSy, $tvwac, PHP_EOL); @file_put_contents($PsDd2, $iggao, FILE_APPEND | LOCK_EX); } }

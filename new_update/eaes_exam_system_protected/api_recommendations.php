@@ -1,0 +1,8 @@
+<?php
+/*   __________________________________________________
+    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
+    |              on 2026-08-01 22:27:04              |
+    |    GitHub: https://github.com/pk-fr/yakpro-po    |
+    |__________________________________________________|
+*/
+ require_once __DIR__ . '/app/bootstrap.php'; use App\Services\ExamRecommendationEngine; use App\Repositories\RecommendationRepository; use App\Core\Session; Session::start(); if (Session::get('admin_id')) { goto a5VNN; } http_response_code(401); echo json_encode(['success' => false, 'error' => 'Unauthorized.']); exit; a5VNN: $INIEN = new ExamRecommendationEngine(); $qRG5I = new RecommendationRepository(); header('Content-Type: application/json'); $l4L0m = $_SERVER['REQUEST_METHOD']; $uJgaK = $_GET['action'] ?? ''; try { if ($l4L0m === 'GET' && $uJgaK === 'analyze') { goto CY8c_; } if ($l4L0m === 'POST' && $uJgaK === 'apply_swap') { goto hVmQ3; } throw new Exception("Invalid endpoint."); goto OLKqV; CY8c_: $ugLXG = (int) ($_GET['exam_id'] ?? 0); $wphBH = $INIEN->generateRecommendations($ugLXG); echo json_encode(['success' => true, 'data' => $wphBH]); goto OLKqV; hVmQ3: $TwvlD = json_decode(file_get_contents('php://input'), true); $ugLXG = (int) ($TwvlD['exam_id'] ?? 0); $U8Gz2 = (int) ($TwvlD['old_question_id'] ?? 0); $u1k0I = (int) ($TwvlD['new_question_id'] ?? 0); $WTuJu = $TwvlD['reason'] ?? 'AI Recommendation Applied'; $qRG5I->swapQuestion($ugLXG, $U8Gz2, $u1k0I, $WTuJu, Session::get('admin_id')); echo json_encode(['success' => true, 'message' => 'Question successfully swapped.']); OLKqV: } catch (Exception $NacY1) { http_response_code(400); echo json_encode(['success' => false, 'error' => $NacY1->getMessage()]); }

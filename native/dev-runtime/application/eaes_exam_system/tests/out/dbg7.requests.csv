@@ -1,0 +1,7 @@
+step,status,ms,errno,error
+login_page,200,2367.9,0,
+login_post,302,2331.4,0,
+wait_poll,200,2366.2,0,
+fetch_exam,302,4427.1,0,
+autosave,200,2368.5,0,
+submit,200,2381.5,0,

@@ -1,0 +1,42 @@
+<?php require_once 'partials/admin_header.php'; ?>
+
+<link rel="stylesheet" href="assets/css/curriculum.css">
+
+<div class="content-wrapper">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1>Curriculum Intelligence Dashboard</h1>
+        <div>
+            <input type="number" id="ci-exam-id" class="form-control d-inline-block w-auto" placeholder="Exam ID">
+            <button class="btn btn-primary" onclick="curriculumApp.loadReport()">Analyze Coverage</button>
+        </div>
+    </div>
+
+    <div id="ci-report-container" style="display:none;" class="mt-4">
+        <!-- Warnings & Alerts -->
+        <div id="ci-warnings" class="mb-4"></div>
+
+        <div class="row">
+            <!-- Coverage Chart Visualizer -->
+            <div class="col-md-7">
+                <div class="card mb-4">
+                    <div class="card-header"><h4>Chapter Weight vs. Actual Exam Distribution</h4></div>
+                    <div class="card-body">
+                        <div id="coverage-bars"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations & Missing Topics -->
+            <div class="col-md-5">
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark"><h4>Curriculum Gaps & Recommendations</h4></div>
+                    <div class="card-body">
+                        <ul id="recommendations-list" class="list-group list-group-flush"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/curriculum.js"></script>

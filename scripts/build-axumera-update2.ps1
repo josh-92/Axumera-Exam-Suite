@@ -1,0 +1,162 @@
+[CmdletBinding()]
+param(
+    [string]$TargetVersion = '2.0.0',
+    [string]$MinSupportedVersion = '1.0.0'
+)
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
+$root = Split-Path -Parent $PSScriptRoot
+$source = Join-Path $root 'new_updateV2\eaes_exam_system_V2'
+if (!(Test-Path -LiteralPath $source)) { throw "new_updateV2 source not found: $source" }
+
+$outDir = Join-Path $root 'build\update-axe2'
+New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+
+Write-Host "Building self-contained Axumera_Update.exe (AXE $TargetVersion) from new_updateV2 source..."
+Write-Host "Source: $source"
+
+# ---------------------------------------------------------------------------
+# 1. Scan the authoritative source and classify every file.
+#    Persistent customer state and dev/test artifacts are NEVER shipped:
+#      .env / .env.example, storage/** (license, lock, cache, logs, sessions,
+#      backups), tests/**, word-to-json/** (standalone converter tool),
+#      desktop.ini, yakpro-po.cnf
+# ---------------------------------------------------------------------------
+function Test-Shipped([string]$rel) {
+    if ($rel -eq '.env' -or $rel -eq '.env.example') { return $false }
+    if ($rel -eq 'desktop.ini' -or $rel -eq 'yakpro-po.cnf') { return $false }
+    if ($rel -like 'loadtest.*') { return $false } # load-test artifacts must never ship
+    foreach ($prefix in @('storage/', 'tests/', 'word-to-json/')) {
+        if ($rel.StartsWith($prefix, [System.StringComparison]::OrdinalIgnoreCase)) { return $false }
+    }
+    return $true
+}
+
+$shipped = @()
+$excluded = @()
+Get-ChildItem -Recurse -File -LiteralPath $source | ForEach-Object {
+    $rel = $_.FullName.Substring($source.Length + 1).Replace('\', '/')
+    if (Test-Shipped $rel) {
+        $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash.ToLowerInvariant()
+        $shipped += [pscustomobject]@{ Path = $rel; Sha256 = $hash }
+    } else {
+        $excluded += $rel
+    }
+}
+
+if ($shipped.Count -eq 0) { throw 'No shipable files found in the new_updateV2 source.' }
+
+Write-Host "  shipped files: $($shipped.Count)"
+Write-Host "  excluded (preserved / never shipped): $($excluded.Count)"
+
+# The migrations that MUST be recorded in schema_migrations after the update
+# (derived from the shipped migration set — the ledger verification in the
+# updater checks exactly this list).
+$migrations = @($shipped | Where-Object { $_.Path -like 'database/migrations/*.sql' } | ForEach-Object {
+    ($_.Path -split '/')[-1]
+} | Sort-Object)
+if ($migrations.Count -eq 0) { throw 'No migrations found in the shipped payload.' }
+Write-Host "  migrations in payload: $($migrations.Count)"
+
+# ---------------------------------------------------------------------------
+# 2. Build the embedded payload container:
+#      MAGIC "AXU2PAYL" | int32 version(1) | int32 count
+#      then per entry: int32 nameLen | utf8 name | int64 contentLen | bytes
+#    The whole container is GZip-compressed and embedded as a managed resource
+#    named "AxumeraPayload". The updater extracts it to a temp directory and
+#    verifies every file's SHA-256 against the embedded manifest.
+# ---------------------------------------------------------------------------
+function New-PayloadContainer([object[]]$files, [string]$sourceRoot) {
+    $ms = New-Object System.IO.MemoryStream
+    $bw = New-Object System.IO.BinaryWriter($ms, (New-Object System.Text.UTF8Encoding($false)))
+    $bw.Write([System.Text.Encoding]::ASCII.GetBytes('AXU2PAYL'))
+    $bw.Write([int32]1)
+    $bw.Write([int32]$files.Count)
+    foreach ($f in $files) {
+        $bytes = [System.IO.File]::ReadAllBytes((Join-Path $sourceRoot $f.Path))
+        $nameBytes = [System.Text.Encoding]::UTF8.GetBytes($f.Path)
+        $bw.Write([int32]$nameBytes.Length)
+        $bw.Write($nameBytes)
+        $bw.Write([int64]$bytes.Length)
+        $bw.Write($bytes)
+    }
+    $bw.Flush()
+    $container = $ms.ToArray()
+    $bw.Dispose()
+    $ms.Dispose()
+
+    # GZip the container.
+    $outMs = New-Object System.IO.MemoryStream
+    $gz = New-Object System.IO.Compression.GZipStream($outMs, [System.IO.Compression.CompressionMode]::Compress, $true)
+    $gz.Write($container, 0, $container.Length)
+    $gz.Dispose()
+    $compressed = $outMs.ToArray()
+    $outMs.Dispose()
+    return $compressed
+}
+
+$payloadBin = Join-Path $outDir 'AxumeraPayload.bin'
+[System.IO.File]::WriteAllBytes($payloadBin, (New-PayloadContainer $shipped $source))
+$payloadSize = (Get-Item -LiteralPath $payloadBin).Length
+Write-Host "Payload container built: $payloadBin ($([math]::Round($payloadSize / 1KB, 1)) KB compressed)"
+
+# ---------------------------------------------------------------------------
+# 3. Emit the embedded manifest as C# source (BOM-free).
+# ---------------------------------------------------------------------------
+$sb = New-Object System.Text.StringBuilder
+[void]$sb.AppendLine('// Auto-generated by scripts/build-axumera-update2.ps1 - DO NOT EDIT')
+[void]$sb.AppendLine('internal static class AxumeraUpdateManifest')
+[void]$sb.AppendLine('{')
+[void]$sb.AppendLine('    public const string Product = "Axumera Exam Suite";')
+[void]$sb.AppendLine("    public const string TargetVersion = `"$TargetVersion`";")
+[void]$sb.AppendLine("    public const string MinSupportedVersion = `"$MinSupportedVersion`";")
+[void]$sb.AppendLine('    public static readonly string[][] Files = new string[][] {')
+foreach ($f in $shipped) {
+    [void]$sb.AppendLine('        new string[] { "' + $f.Path + '", "' + $f.Sha256 + '" },')
+}
+[void]$sb.AppendLine('    };')
+[void]$sb.AppendLine('    public static readonly string[] Migrations = new string[] {')
+foreach ($m in $migrations) {
+    [void]$sb.AppendLine('        "' + $m + '",')
+}
+[void]$sb.AppendLine('    };')
+[void]$sb.AppendLine('}')
+
+$manifestCs = Join-Path $outDir 'AxumeraUpdateManifest.cs'
+[System.IO.File]::WriteAllText($manifestCs, $sb.ToString(), (New-Object System.Text.UTF8Encoding($false)))
+Write-Host "Manifest generated: $manifestCs ($($shipped.Count) files)"
+
+# ---------------------------------------------------------------------------
+# 4. Compile the updater (WinForms GUI + --auto mode) with the payload
+#    embedded as a managed resource.
+# ---------------------------------------------------------------------------
+$csc = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
+if (!(Test-Path -LiteralPath $csc)) { throw 'Microsoft .NET Framework C# compiler was not found.' }
+
+$output = Join-Path $outDir 'Axumera_Update.exe'
+$srcCs = Join-Path $root 'controller\AxumeraUpdate2.cs'
+
+$appManifest = Join-Path $root 'controller\app.manifest'
+if (!(Test-Path -LiteralPath $appManifest)) { throw 'Updater application manifest (requireAdministrator) not found.' }
+
+& $csc /nologo /target:winexe /win32manifest:$appManifest /r:System.Windows.Forms.dll /r:System.Drawing.dll "/resource:$payloadBin,AxumeraPayload" /out:$output $srcCs $manifestCs
+if ($LASTEXITCODE -ne 0) { throw 'AxumeraUpdate2 compilation failed.' }
+Write-Host "Compiled: $output"
+
+# ---------------------------------------------------------------------------
+# 5. Deliver the final self-contained executable.
+#    - new_updateV2\Axumera_Update.exe  (authoritative deliverable)
+#    - distribution\Axumera_Update.exe  (release copy)
+# ---------------------------------------------------------------------------
+$newUpdateExe = Join-Path $root 'new_updateV2\Axumera_Update.exe'
+Copy-Item -Force -LiteralPath $output -Destination $newUpdateExe
+Write-Host "Delivered: $newUpdateExe"
+
+$distExe = Join-Path $root 'distribution\Axumera_Update.exe'
+Copy-Item -Force -LiteralPath $output -Destination $distExe
+Write-Host "Delivered: $distExe"
+
+$hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $newUpdateExe).Hash
+Write-Host "SHA-256: $hash"
+Write-Host "Self-contained AXE $TargetVersion updater built successfully."

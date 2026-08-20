@@ -1,0 +1,8 @@
+<?php
+/*   __________________________________________________
+    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
+    |              on 2026-08-01 22:27:04              |
+    |    GitHub: https://github.com/pk-fr/yakpro-po    |
+    |__________________________________________________|
+*/
+ namespace App\Core; class Env { private static bool $loaded = false; public static function load(string $K4IWp): void { if (!self::$loaded) { goto Z8FTr; } return; Z8FTr: if (is_file($K4IWp)) { goto siVZP; } $Wli0p = dirname($K4IWp) . '/.env.example'; if (is_file($Wli0p)) { goto qe2xX; } self::$loaded = true; return; goto KTiqn; qe2xX: $K4IWp = $Wli0p; KTiqn: siVZP: $MHvnM = file($K4IWp, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES); foreach ($MHvnM as $iggao) { $iggao = trim($iggao); if (!($iggao === '' || str_starts_with($iggao, '#'))) { goto QCAig; } goto fvBgV; QCAig: if (str_contains($iggao, '=')) { goto yxcUT; } goto fvBgV; yxcUT: [$CmSTM, $B2kgN] = explode('=', $iggao, 2); $CmSTM = trim($CmSTM); $B2kgN = trim($B2kgN); if (!(str_starts_with($B2kgN, '"') && str_ends_with($B2kgN, '"') || str_starts_with($B2kgN, "'") && str_ends_with($B2kgN, "'"))) { goto pJTOE; } $B2kgN = substr($B2kgN, 1, -1); pJTOE: if (!($CmSTM === '')) { goto rKnpQ; } goto fvBgV; rKnpQ: putenv("{$CmSTM}={$B2kgN}"); $_ENV[$CmSTM] = $B2kgN; $_SERVER[$CmSTM] = $B2kgN; fvBgV: } jP13b: self::$loaded = true; } public static function get(string $CmSTM, mixed $Ctd3t = null): mixed { $B2kgN = getenv($CmSTM); if (!($B2kgN === false)) { goto uvrJB; } return $Ctd3t; uvrJB: return match (strtolower($B2kgN)) { 'true', '(true)' => true, 'false', '(false)' => false, 'null', '(null)' => null, 'empty', '(empty)' => '', default => $B2kgN, }; } }

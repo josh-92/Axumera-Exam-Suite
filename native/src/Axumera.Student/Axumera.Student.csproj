@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>Axumera.Student</RootNamespace>
+    <AssemblyName>Axumera.Student</AssemblyName>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Axumera.Core\Axumera.Core.csproj" />
+    <ProjectReference Include="..\Axumera.Ui\Axumera.Ui.csproj" />
+    <ProjectReference Include="..\Axumera.Licensing\Axumera.Licensing.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\app.ico" />
+    <EmbeddedResource Include="Resources\logo.png" />
+  </ItemGroup>
+</Project>
